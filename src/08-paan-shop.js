@@ -47,16 +47,70 @@
  */
 export function createPaanOrder(basePaan, customizations) {
   // Your code here
+  if (
+    typeof basePaan !== "object" ||
+    basePaan === null ||
+    Array.isArray(basePaan)
+  ) {
+    return {};
+  }
+
+  // customizations invalid hai → sirf copy return
+  if (
+    typeof customizations !== "object" ||
+    customizations === null ||
+    Array.isArray(customizations)
+  ) {
+    return Object.assign({}, basePaan);
+  }
+
+  // merge and override
+  return Object.assign({}, basePaan, customizations);
 }
 
 export function freezeMenu(menu) {
   // Your code here
+  if (typeof menu !== "object" || menu === null || Array.isArray(menu)) {
+    return {};
+  }
+
+  return Object.freeze(menu);
 }
 
 export function updatePrices(menu, increase) {
   // Your code here
+  if (
+    typeof menu !== "object" ||
+    menu === null ||
+    Array.isArray(menu) ||
+    typeof increase !== "number"
+  ) {
+    return {};
+  }
+
+  const updated = Object.entries(menu).map(([key, value]) => [
+    key,
+    typeof value === "number" ? value + increase : value,
+  ]);
+
+  return Object.fromEntries(updated);
 }
 
 export function mergeDailySpecials(regularMenu, specialsMenu) {
   // Your code here
+  const safeRegular =
+    typeof regularMenu === "object" &&
+    regularMenu !== null &&
+    !Array.isArray(regularMenu)
+      ? regularMenu
+      : {};
+
+  const safeSpecials =
+    typeof specialsMenu === "object" &&
+    specialsMenu !== null &&
+    !Array.isArray(specialsMenu)
+      ? specialsMenu
+      : {};
+
+  return { ...safeRegular, ...safeSpecials };
 }
